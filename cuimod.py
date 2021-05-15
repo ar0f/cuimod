@@ -8,10 +8,13 @@ import time
 import math
 import random
 import inspect
+import requests
 import datetime
 from enum import Enum
 
 from natsort import natsorted
+
+VERSION = 1.0
 
 _OK = "\x1b[96m"
 _WA = "\x1b[31m"
@@ -263,3 +266,38 @@ def calculate_size(size_bytes):
     calc_pow = math.pow(1024, calc)
     calc_round = round(size_bytes / calc_pow, 2)
     return "{} {}".format(calc_round, size_name[calc])
+
+# ? update cuimod from github.
+def update_cuimod():
+    cli = CUI_MOD().cli
+    def GET(u):
+        try:
+            req = requests.get(u)
+            response = req.status_code
+            if response == 200:
+                return req.content
+            else:
+                cli("cuimod.py: status code: {} error: {}".format(response, req.reason), 4)
+                return None
+        except Exception as err:
+            cli("cuimod.py: https request error. {}".format(err), 4)
+            return None
+    url = "https://raw.githubusercontent.com/ar0f/cuimod/master/cuimod.py"
+    ver = "https://raw.githubusercontent.com/ar0f/cuimod/master/version"
+    resp = GET(ver)
+    ans = False
+    get_ver = None
+    if resp:
+        get_ver = float(resp)
+        if VERSION < get_ver:
+            cli("cuimod.py: new version available. do you want update? (y, n)", 1)
+            ans = input("> ")
+            if ans in ["Y", "y", "YES", "Yes", "yes"]:
+                ans = True
+    if ans:
+        resp = GET(url)
+        if resp:
+            with open(__file__, 'wb') as w:
+                w.write(resp)
+            size = calculate_size(len(resp))
+            cli("cuimod.py: updated to ver.{} size: {}".format(get_ver, size), 2)
