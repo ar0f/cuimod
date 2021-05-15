@@ -285,7 +285,7 @@ def update_cuimod():
     url = "https://raw.githubusercontent.com/ar0f/cuimod/master/cuimod.py"
     ver = "https://raw.githubusercontent.com/ar0f/cuimod/master/version"
     resp = GET(ver)
-    ans = False
+    answer = False
     get_ver = None
     if resp:
         get_ver = float(resp)
@@ -293,11 +293,11 @@ def update_cuimod():
             cli("cuimod.py: new version available. do you want update? (y, n)", 1)
             ans = input("> ")
             if ans in ["Y", "y", "YES", "Yes", "yes"]:
-                ans = True
-    if ans:
+                answer = True
+    if answer:
         resp = GET(url)
         if resp:
             with open(__file__, 'wb') as w:
                 w.write(resp)
             size = calculate_size(len(resp))
-            cli("cuimod.py: updated to ver.{} size: {}".format(get_ver, size), 2)
+            cli("cuimod.py: updated to ver.{} size: {}\n".format(get_ver, size), 2)
