@@ -14,7 +14,7 @@ from enum import Enum
 
 from natsort import natsorted
 
-VERSION = 1.0
+VERSION = 1.1
 
 _OK = "\x1b[96m"
 _WA = "\x1b[31m"
@@ -290,7 +290,8 @@ def update_cuimod():
     if resp:
         get_ver = float(resp)
         if VERSION < get_ver:
-            cli("cuimod.py: new version available. do you want update? (y, n)", 1)
+            cli("cuimod.py: new version available. ver.{} -> ver.{}".format(VERSION, get_ver), 1)
+            cli("cuimod.py: do you want update? (y, n)", 1)
             ans = input("> ")
             if ans in ["Y", "y", "YES", "Yes", "yes"]:
                 answer = True
