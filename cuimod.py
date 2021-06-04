@@ -267,9 +267,11 @@ def calculate_size(size_bytes):
     calc_round = round(size_bytes / calc_pow, 2)
     return "{} {}".format(calc_round, size_name[calc])
 
+
 # ? update cuimod from github.
 def update_cuimod():
     cli = CUI_MOD().cli
+
     def GET(u):
         try:
             req = requests.get(u)
@@ -277,11 +279,15 @@ def update_cuimod():
             if response == 200:
                 return req.content
             else:
-                cli("cuimod.py: status code: {} error: {}".format(response, req.reason), 4)
+                cli(
+                    "cuimod.py: status code: {} error: {}".format(response, req.reason),
+                    4,
+                )
                 return None
         except Exception as err:
             cli("cuimod.py: https request error. {}".format(err), 4)
             return None
+
     url = "https://raw.githubusercontent.com/ar0f/cuimod/master/cuimod.py"
     ver = "https://raw.githubusercontent.com/ar0f/cuimod/master/version"
     resp = GET(ver)
@@ -290,7 +296,12 @@ def update_cuimod():
     if resp:
         get_ver = float(resp)
         if VERSION < get_ver:
-            cli("cuimod.py: new version available. ver.{} -> ver.{}".format(VERSION, get_ver), 1)
+            cli(
+                "cuimod.py: new version available. ver.{} -> ver.{}".format(
+                    VERSION, get_ver
+                ),
+                1,
+            )
             cli("cuimod.py: do you want update? (y, n)", 1)
             ans = input("> ")
             if ans in ["Y", "y", "YES", "Yes", "yes"]:
@@ -298,7 +309,7 @@ def update_cuimod():
     if answer:
         resp = GET(url)
         if resp:
-            with open(__file__, 'wb') as w:
+            with open(__file__, "wb") as w:
                 w.write(resp)
             size = calculate_size(len(resp))
             cli("cuimod.py: updated to ver.{} size: {}\n".format(get_ver, size), 2)
