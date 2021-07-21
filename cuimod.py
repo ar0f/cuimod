@@ -6,6 +6,7 @@ import os
 import re
 import time
 import math
+import shutil
 import random
 import inspect
 import requests
@@ -14,7 +15,7 @@ from enum import Enum
 
 from natsort import natsorted
 
-VERSION = 1.1
+VERSION = 1.2
 
 _OK = "\x1b[96m"
 _WA = "\x1b[31m"
@@ -266,6 +267,13 @@ def calculate_size(size_bytes):
     calc_pow = math.pow(1024, calc)
     calc_round = round(size_bytes / calc_pow, 2)
     return "{} {}".format(calc_round, size_name[calc])
+
+
+# ? print separator by terminal size.
+def print_separator():
+    terminal_size = shutil.get_terminal_size()
+    columns = terminal_size.columns
+    print("-" * (columns))
 
 
 # ? update cuimod from github.
